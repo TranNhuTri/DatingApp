@@ -15,7 +15,7 @@ namespace DatingApp.API.Extensions
                         {
                             options.TokenValidationParameters = new TokenValidationParameters()
                             {
-                                ValidateIssuer = true,
+                                ValidateIssuer = false,
                                 ValidateAudience = false,
                                 ValidateLifetime = false,
                                 ValidateIssuerSigningKey = true,
@@ -23,7 +23,6 @@ namespace DatingApp.API.Extensions
                             };
                         }
                     );
-            
             return services;
         }
     }

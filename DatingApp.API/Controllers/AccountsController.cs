@@ -4,6 +4,7 @@ using System.Text;
 using DatingApp.API.Controllers;
 using DatingApp.API.Database;
 using DatingApp.API.Database.Entities;
+using DatingApp.API.Database.Repositories;
 using DatingApp.API.DTOs;
 using DatingApp.API.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,20 +13,20 @@ namespace Namespace
 {
     public class AccountsController : BaseApiController
     {
-        private readonly DataContext _context;
         private readonly ITokenService _tokenService;
-        public AccountsController(DataContext context, ITokenService tokenService)
+        private readonly IUserRepository _userRepo;
+        public AccountsController(IUserRepository userRepo, ITokenService tokenService)
         {
+            _userRepo = userRepo;
             _tokenService = tokenService;
-            _context = context;
 
         }
 
         [HttpPost("register")]
-        public ActionResult<string> Register(RegisterDTO registerDTO)
+        public ActionResult<string> Register(RegisterDto registerDTO)
         {
             registerDTO.Username.ToLower();
-            if (_context.Users.Any(u => u.Username == registerDTO.Username))
+            if (_userRepo.GetUserByUsername(registerDTO.Username) != null)
             {
                 return BadRequest("Username is exisited");
             }
@@ -39,16 +40,20 @@ namespace Namespace
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
                 PasswordSalt = hmac.Key
             };
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            _userRepo.CreateUser(user);
+            _userRepo.SaveChanges();
 
-            return Ok(_tokenService.CreateToken(user));
+            return Ok(new UserResponse()
+            {
+                Username = user.Username,
+                Token = _tokenService.CreateToken(user)
+            });
         }
 
         [HttpPost("login")]
-        public ActionResult<string> Login(LoginDTO loginDTO)
+        public ActionResult<string> Login(LoginDto loginDTO)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Username == loginDTO.Username);
+            var user = _userRepo.GetUserByUsername(loginDTO.Username);
             if (user == null) return Unauthorized("Invalid username or password");
 
             using var hmac = new HMACSHA512(user.PasswordSalt);
@@ -60,7 +65,11 @@ namespace Namespace
                 if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid username or password");
             }
 
-             return _tokenService.CreateToken(user);
+            return Ok(new UserResponse()
+            {
+                Username = user.Username,
+                Token = _tokenService.CreateToken(user)
+            });
         }
     }
 }

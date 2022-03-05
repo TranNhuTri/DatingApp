@@ -26,16 +26,45 @@ namespace DatingApp.API.Database.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Avatar")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.Property<string>("City")
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Gender")
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
+
+                    b.Property<string>("Introduction")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("KnownAs")
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<byte[]>("PasswordHash")
                         .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("PasswordSalt")
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -45,6 +74,47 @@ namespace DatingApp.API.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("DatingApp.API.Database.Entities.UserLike", b =>
+                {
+                    b.Property<int>("LikeUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SourceUserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LikeUserId", "SourceUserId");
+
+                    b.HasIndex("SourceUserId");
+
+                    b.ToTable("UserLikes");
+                });
+
+            modelBuilder.Entity("DatingApp.API.Database.Entities.UserLike", b =>
+                {
+                    b.HasOne("DatingApp.API.Database.Entities.User", "LikeUser")
+                        .WithMany("LikedUsers")
+                        .HasForeignKey("LikeUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("DatingApp.API.Database.Entities.User", "SoureUser")
+                        .WithMany("SourceUsers")
+                        .HasForeignKey("SourceUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("LikeUser");
+
+                    b.Navigation("SoureUser");
+                });
+
+            modelBuilder.Entity("DatingApp.API.Database.Entities.User", b =>
+                {
+                    b.Navigation("LikedUsers");
+
+                    b.Navigation("SourceUsers");
                 });
 #pragma warning restore 612, 618
         }

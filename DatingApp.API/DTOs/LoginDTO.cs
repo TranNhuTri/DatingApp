@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DatingApp.API.DTOs
 {
-    public class LoginDTO
+    public class LoginDto
     {
         [Required]
         [StringLength(32)]

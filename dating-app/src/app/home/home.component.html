@@ -1,0 +1,12 @@
+<div class="container" *ngIf="!isRegister">
+    <div class="text-center">
+        <h1>Welcome to Dating App</h1>
+        <p>You can Register a new account in here!</p>
+        <div class="text-center">
+            <button class="btn btn-primary" (click)="isRegister=!isRegister">Register</button>
+        </div>
+    </div>
+</div>
+<div class="container" *ngIf="isRegister">
+    <app-register-form (cancelRegister)="cancelRegisterMode($event)"></app-register-form>
+</div>

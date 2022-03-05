@@ -1,0 +1,45 @@
+<h1 class="text-center">Profile</h1>
+<form #registerForm="ngForm" *ngIf="profile" (ngSubmit)="submit()">
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" placeholder="Enter username"
+            [(ngModel)]="profile.username" name="username" readonly>
+    </div>
+    <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="email" class="form-control" id="email" placeholder="Enter email" [(ngModel)]="profile.email"
+            name="email" readonly>
+    </div>
+    <div class="form-group">
+        <label for="dateOfBirth">Birthday</label>
+        <input type="string" class="form-control" id="dateOfBirth" placeholder="Enter birthday"
+            [(ngModel)]="profile.dateOfBirth" name="dateOfBirth">
+    </div>
+    <div class="form-group">
+        <label for="knownAs">Known as</label>
+        <input type="text" class="form-control" id="knownAs" placeholder="Enter know as" [(ngModel)]="profile.knownAs"
+            name="knownAs">
+    </div>
+    <div class="form-group">
+        <label for="gender">Gender</label>
+        <input type="text" class="form-control" id="gender" placeholder="Enter gender" [(ngModel)]="profile.gender"
+            name="gender">
+    </div>
+    <div class="form-group">
+        <label for="introduction">Introduction</label>
+        <textarea type="text" class="form-control" id="introduction" placeholder="Enter introduction"
+            [(ngModel)]="profile.introduction" name="introduction"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" class="form-control" id="city" placeholder="Enter city" [(ngModel)]="profile.city"
+            name="city">
+    </div>
+    <div class="form-group">
+        <label for="avatar">Avatar</label>
+        <input type="text" class="form-control" id="avatar" placeholder="Enter avatar link" [(ngModel)]="profile.avatar"
+            name="avatar">
+    </div>
+    <button type="submit" class="btn btn-primary mr-sm-2">Submit</button>
+    <!-- <button class="btn btn-danger" (click)="cancel()">Cancel</button> -->
+</form>
